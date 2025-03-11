@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, ClassVar
 from pydantic import Json
 
 from .base import CreateBase, ResponseBase, UpdateBase
@@ -16,4 +16,5 @@ class AssessmentUpdate(AssessmentBase, UpdateBase):
     pass
 
 class Assessment(AssessmentBase, ResponseBase):
+    table_name: ClassVar[str] = "Assessment"
     pass 
