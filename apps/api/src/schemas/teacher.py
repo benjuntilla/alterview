@@ -3,6 +3,7 @@ from .base import CreateBase, ResponseBase, UpdateBase
 
 class TeacherBase(CreateBase):
     table_name: ClassVar[str] = "Teacher"
+    name: str
     pass
 
 class TeacherCreate(TeacherBase):
