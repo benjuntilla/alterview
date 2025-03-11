@@ -44,8 +44,3 @@ class ResponseBase(BaseModel):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
-
-    @property
-    def table_name(self) -> str:
-        """Get table name from class name"""
-        return f"{self.__class__.__name__.lower()}s"

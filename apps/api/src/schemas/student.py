@@ -1,9 +1,10 @@
-from typing import List
+from typing import List, ClassVar
 
 from .base import CreateBase, ResponseBase, UpdateBase
 
 class StudentBase(CreateBase):
     assessment_ids: List[int] = []
+    table_name: ClassVar[str] = "Student"
 
 class StudentCreate(StudentBase):
     pass

@@ -8,6 +8,7 @@ class AssessmentBase(CreateBase):
     first_question: str
     system_prompt: str
     mindmap_template: Json
+    table_name: ClassVar[str] = "Assessment"
 
 class AssessmentCreate(AssessmentBase):
     pass
@@ -16,5 +17,4 @@ class AssessmentUpdate(AssessmentBase, UpdateBase):
     pass
 
 class Assessment(AssessmentBase, ResponseBase):
-    table_name: ClassVar[str] = "Assessment"
     pass 
