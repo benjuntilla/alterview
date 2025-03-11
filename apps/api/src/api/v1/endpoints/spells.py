@@ -1,37 +1,37 @@
 from typing import Literal, Optional, Union
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
-from src.api.deps import SessionDep
-from src.crud import spell
-from src.schemas import Spell, SpellSearchResults
+from ...dependencies import get_db
+from ....crud import spell
+from ....schemas import Spell, SpellSearchResults
 
 router = APIRouter()
 
 
 @router.get("/get/", status_code=200, response_model=Spell)
-async def get_spell(session: SessionDep, spell_id: str) -> Spell:
+async def get_spell(spell_id: str, db=Depends(get_db)) -> Spell:
     """Returns a spell from a spell_id.
 
     **Returns:**
     - spell: spell object.
     """
-    return await spell.get(session, id=spell_id)
+    return await spell.get(db, id=spell_id)
 
 
 @router.get("/get-all/", status_code=200, response_model=list[Spell])
-async def get_all_spells(session: SessionDep) -> list[Spell]:
+async def get_all_spells(db=Depends(get_db)) -> list[Spell]:
     """Returns a list of all spells.
 
     **Returns:**
     - list[spell]: List of all spells.
     """
-    return await spell.get_all(session)
+    return await spell.get_all(db)
 
 
 @router.get("/search/", status_code=200, response_model=SpellSearchResults)
 async def search_spells(
-    session: SessionDep,
+    db=Depends(get_db),
     search_on: Literal["id", "name", "description"] = "name",
     keyword: Optional[Union[str, int]] = None,
     max_results: Optional[int] = 10,
@@ -48,11 +48,11 @@ async def search_spells(
     - SpellSearchResults: Object containing a list of the top `max_results` items that match the keyword.
     """
     if not keyword:
-        results = await spell.get_all(session)
+        results = await spell.get_all(db)
         return SpellSearchResults(results=results)
 
     results = await spell.search_all(
-        session, field=search_on, search_value=keyword, max_results=max_results
+        db, field=search_on, search_value=keyword, max_results=max_results
     )
 
     if not results:
@@ -60,4 +60,4 @@ async def search_spells(
             status_code=404, detail="No spells found matching the search criteria"
         )
 
-    return SpellSearchResults(results=results)
+    return SpellSearchResults(results=results) 

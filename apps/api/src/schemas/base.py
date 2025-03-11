@@ -1,5 +1,6 @@
 from typing import ClassVar
 from pydantic import BaseModel, ConfigDict
+from datetime import datetime
 
 # Shared properties
 # class CRUDBaseModel(BaseModel):
@@ -10,15 +11,19 @@ from pydantic import BaseModel, ConfigDict
 # Properties to receive on item creation
 # in
 class CreateBase(BaseModel):
-    # inherent to add more properties for creating
-    pass
+    """Base class for create schemas"""
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Properties to receive on item update
 # in
 class UpdateBase(BaseModel):
-    # inherent to add more properties for updating
-    id: str
+    """Base class for update schemas"""
+
+    id: int
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 # response
@@ -32,9 +37,15 @@ class InDBBase(BaseModel):
 # Properties to return to client
 # crud model
 # out
-class ResponseBase(InDBBase):
-    # inherent to add more properties for responding
-    table_name: ClassVar[str] = "ResponseBase".lower()
-    Config: ClassVar[ConfigDict] = ConfigDict(
-        extra="ignore", arbitrary_types_allowed=True
-    )
+class ResponseBase(BaseModel):
+    """Base class for response schemas"""
+
+    id: int
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+    @property
+    def table_name(self) -> str:
+        """Get table name from class name"""
+        return f"{self.__class__.__name__.lower()}s"
