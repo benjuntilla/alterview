@@ -8,7 +8,7 @@ from ....crud.assessment_result import assessment_result
 
 router = APIRouter()
 
-@router.post("/", response_model=AssessmentResult)
+@router.get("/", response_model=AssessmentResult)
 async def create_assessment_result(result_in: AssessmentResultCreate, db: AsyncClient = Depends(get_db)):
     return await assessment_result.create(db=db, obj_in=result_in)
 
