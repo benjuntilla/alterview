@@ -38,7 +38,7 @@ def get_application():
     _app.include_router(info_router, tags=[""])
 
     _app.add_middleware(
-        # CORSMiddleware,
+        CORSMiddleware,
         allow_origins=["*"],
         allow_credentials=True,
         allow_methods=["*"],
