@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, AsyncGenerator
 
 from fastapi import Depends, HTTPException
 from supabase._async.client import AsyncClient, create_client
@@ -7,7 +7,7 @@ from supabase.lib.client_options import AsyncClientOptions as ClientOptions
 from src.config import settings
 
 
-async def get_db() -> AsyncClient:
+async def get_db() -> AsyncGenerator[AsyncClient, None]:
     client: AsyncClient | None = None
     try:
         client = await create_client(
