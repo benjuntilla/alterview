@@ -29,6 +29,8 @@ Deno.serve(async (req) => {
     const prompt = `Given this transcript of a student's interview with a teacher: "${transcript}"
     
 Please analyze it and fill out the following template with relevant information. 
+You'll need to fill in the studentResponse and understandingLevel (1-5) fields for each 
+topic and subtopic.
 Respond ONLY with the completed JSON template, maintaining the exact same structure:
 ${JSON.stringify(mindmap_template, null, 2)}`
 
