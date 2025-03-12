@@ -8,7 +8,7 @@ class AssessmentResultBase(CreateBase):
     teacher_id: int
     student_id: int
     voice_recording_id: Optional[int] = None
-    transcript_id: Optional[int] = None
+    transcript: Optional[str] = None
     mindmap: Optional[Json] = None
     table_name: ClassVar[str] = "AssessmentResult"
 

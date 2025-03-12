@@ -32,4 +32,34 @@ async def read_teacher_results(teacher_id: int, db: AsyncClient = Depends(get_db
 @router.put("/{result_id}", response_model=AssessmentResult)
 async def update_assessment_result(result_id: int, result_in: AssessmentResultUpdate, db: AsyncClient = Depends(get_db)):
     result_in.id = result_id
-    return await assessment_result.update(db, obj_in=result_in) 
+    return await assessment_result.update(db, obj_in=result_in)
+
+@router.post("/{result_id}/process", response_model=AssessmentResult)
+async def process_assessment_result(
+    result_id: int, 
+    db: AsyncClient = Depends(get_db)
+):
+    # Get the existing result
+    result = await assessment_result.get(db, id=result_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Assessment result not found")
+    
+    # Call the Supabase Edge Function
+    response = await db.functions().invoke(
+        'process-transcript',
+        {
+            'transcript': result.transcript,
+            'mindmap_template': result.mindmap
+        }
+    )
+    
+    if 'error' in response:
+        raise HTTPException(status_code=400, detail=response['error'])
+    
+    # Update the result with the processed template
+    update_data = AssessmentResultUpdate(
+        id=result_id,
+        mindmap=response['mindmap']
+    )
+    
+    return await assessment_result.update(db=db, obj_in=update_data) 

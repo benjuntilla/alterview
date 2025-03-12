@@ -11,7 +11,7 @@ const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY')
 
 interface RequestBody {
   transcript: string;
-  template: Record<string, string>;
+  mindmap_template: Record<string, string>;
 }
 
 console.log("Hello from Functions!")
@@ -19,10 +19,10 @@ console.log("Hello from Functions!")
 Deno.serve(async (req) => {
   try {
     // Parse request body
-    const { transcript, template }: RequestBody = await req.json()
+    const { transcript, mindmap_template }: RequestBody = await req.json()
 
-    if (!transcript || !template) {
-      throw new Error('Missing required fields: transcript and template')
+    if (!transcript || !mindmap_template) {
+      throw new Error('Missing required fields: transcript and mindmap_template')
     }
 
     // Construct prompt for the LLM
@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
     
 Please analyze it and fill out the following template with relevant information. 
 Respond ONLY with the completed JSON template, maintaining the exact same structure:
-${JSON.stringify(template, null, 2)}`
+${JSON.stringify(mindmap_template, null, 2)}`
 
     // Call OpenRouter API
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -59,7 +59,7 @@ ${JSON.stringify(template, null, 2)}`
     const filledTemplate = JSON.parse(cleanContent)
 
     return new Response(
-      JSON.stringify({ template: filledTemplate }),
+      JSON.stringify({ mindmap: filledTemplate }),
       { 
         headers: { "Content-Type": "application/json" },
         status: 200
