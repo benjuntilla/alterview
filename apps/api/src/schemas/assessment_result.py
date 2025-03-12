@@ -19,5 +19,9 @@ class AssessmentResultCreate(AssessmentResultBase):
 class AssessmentResultUpdate(AssessmentResultBase, UpdateBase):
     pass
 
+class AssessmentResultResponse(AssessmentResultBase, ResponseBase):
+    class Config:
+        json_schema_extra = {"exclude": {"mindmap"}}
+
 class AssessmentResult(AssessmentResultBase, ResponseBase):
     pass 
