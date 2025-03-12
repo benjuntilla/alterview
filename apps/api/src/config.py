@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     DB_API_KEY: str = os.getenv("DB_API_KEY")
     DB_EMAIL: str = os.getenv("DB_EMAIL")
     DB_PASSWORD: str = os.getenv("DB_PASSWORD")
+    OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY")
     model_config = SettingsConfigDict(env_file=".env")
     API_VERSION: str = "/api/v1"
     ROOT: str = ROOT_PATH
