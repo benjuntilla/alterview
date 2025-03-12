@@ -5,6 +5,7 @@ from supabase._async.client import AsyncClient
 from ...dependencies import get_db
 from ....schemas.assessment_result import AssessmentResult, AssessmentResultCreate, AssessmentResultUpdate
 from ....crud.assessment_result import assessment_result
+from ....crud.assessment import assessment
 
 router = APIRouter()
 
@@ -45,12 +46,17 @@ async def process_assessment_result(
     if result is None:
         raise HTTPException(status_code=404, detail="Assessment result not found")
     
+    # Get the assessment to get its mindmap template
+    assessment_obj = await assessment.get(db, id=result.assessment_id)
+    if assessment_obj is None:
+        raise HTTPException(status_code=404, detail="Associated assessment not found")
+    
     # Call the Supabase Edge Function
     response = await db.functions().invoke(
         'process-transcript',
         {
             'transcript': result.transcript,
-            'mindmap_template': result.mindmap
+            'mindmap_template': assessment_obj.mindmap_template
         }
     )
     

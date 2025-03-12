@@ -10,7 +10,10 @@ from ..schemas.assessment import Assessment, AssessmentCreate, AssessmentUpdate
 class CRUDAssessment(CRUDBase[Assessment, AssessmentCreate, AssessmentUpdate]):
     async def get(self, db: AsyncClient, *, id: int) -> Optional[Assessment]:
         try:
-            return await super().get(db, id=str(id))
+            response = await db.table(self.model.table_name).select("*").eq("id", id).single().execute()
+            if not response.data:
+                return None
+            return self.model(**response.data)
         except Exception as e:
             raise HTTPException(
                 status_code=404,
