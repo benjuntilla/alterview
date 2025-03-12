@@ -1,3 +1,4 @@
+import json
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from supabase._async.client import AsyncClient
@@ -66,7 +67,7 @@ async def process_assessment_result(
     # Update the result with the processed template and insights
     update_data = AssessmentResultUpdate(
         id=result_id,
-        mindmap=response['mindmap'],
+        mindmap=json.dumps(response['mindmap']),
         insights=response['insights']
     )
     
