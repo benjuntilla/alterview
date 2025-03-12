@@ -54,5 +54,27 @@ class CRUDAssessment(CRUDBase[Assessment, AssessmentCreate, AssessmentUpdate]):
                 detail=f"An error occurred while fetching teacher's assessments. {e}",
             )
 
+    async def get_by_student(self, db: AsyncClient, student_id: int) -> list[Assessment]:
+        try:
+            # First get the student to get their assessment_ids
+            student_response = await db.table("Student").select("assessment_ids").eq("id", student_id).execute()
+            if not student_response.data:
+                raise HTTPException(status_code=404, detail="Student not found")
+            
+            assessment_ids = student_response.data[0]["assessment_ids"]
+            if not assessment_ids:
+                return []
+            
+            # Then get all assessments with those IDs
+            response = await db.table(self.model.table_name).select("*").in_("id", assessment_ids).execute()
+            return [self.model(**record) for record in response.data]
+        except HTTPException as he:
+            raise he
+        except Exception as e:
+            raise HTTPException(
+                status_code=404,
+                detail=f"An error occurred while fetching student's assessments. {e}",
+            )
+
 
 assessment = CRUDAssessment(Assessment) 
