@@ -24,6 +24,11 @@ async def read_assessments(db: AsyncClient = Depends(get_db)):
     assessments = await assessment.get_all(db)
     return assessments
 
+@router.get("/teacher/{teacher_id}", response_model=List[Assessment])
+async def read_teacher_assessments(teacher_id: int, db: AsyncClient = Depends(get_db)):
+    assessments = await assessment.get_by_teacher(db, teacher_id=teacher_id)
+    return assessments
+
 @router.delete("/{assessment_id}", response_model=Assessment)
 async def delete_assessment(assessment_id: int, db: AsyncClient = Depends(get_db)):
     return await assessment.delete(db, id=assessment_id) 

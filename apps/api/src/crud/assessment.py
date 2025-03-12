@@ -44,5 +44,15 @@ class CRUDAssessment(CRUDBase[Assessment, AssessmentCreate, AssessmentUpdate]):
                 detail=f"{e.code}: Failed to delete assessment. {e.details}",
             )
 
+    async def get_by_teacher(self, db: AsyncClient, teacher_id: int) -> list[Assessment]:
+        try:
+            response = await db.table(self.model.table_name).select("*").eq("teacher_id", teacher_id).execute()
+            return [self.model(**record) for record in response.data]
+        except Exception as e:
+            raise HTTPException(
+                status_code=404,
+                detail=f"An error occurred while fetching teacher's assessments. {e}",
+            )
+
 
 assessment = CRUDAssessment(Assessment) 

@@ -9,6 +9,7 @@ class AssessmentBase(CreateBase):
     system_prompt: str
     mindmap_template: Json
     table_name: ClassVar[str] = "Assessment"
+    teacher_id: int
 
 class AssessmentCreate(AssessmentBase):
     pass
