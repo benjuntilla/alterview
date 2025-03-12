@@ -41,7 +41,7 @@ async def read_student_assessments(student_id: int, db: AsyncClient = Depends(ge
 async def delete_assessment(assessment_id: int, db: AsyncClient = Depends(get_db)):
     return await assessment.delete(db, id=assessment_id)
 
-@router.post("/{assessment_id}/process")
+@router.get("/{assessment_id}/process")
 async def process_assessment_results(
     assessment_id: int,
     db: AsyncClient = Depends(get_db)
