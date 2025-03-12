@@ -11,6 +11,7 @@ class AssessmentResultBase(CreateBase):
     transcript: Optional[str] = None
     mindmap: Optional[Json] = None
     table_name: ClassVar[str] = "AssessmentResult"
+    insights: Optional[Json] = None
 
 class AssessmentResultCreate(AssessmentResultBase):
     pass

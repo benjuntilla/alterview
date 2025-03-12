@@ -58,8 +58,41 @@ ${JSON.stringify(mindmap_template, null, 2)}`
     const cleanContent = llmResponse.choices[0].message.content.replace(/```json\n?|\n?```/g, '').trim()
     const filledTemplate = JSON.parse(cleanContent)
 
+    // Generate insights based on the filled template
+    const insightsPrompt = `Based on this assessment data:
+${JSON.stringify(filledTemplate, null, 2)}
+
+Generate 3-5 specific, actionable insights for the teacher to help this student improve. 
+Each insight should be concrete and implementable. Format the response as a JSON array of strings.`
+
+    const insightsResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://alterview-web.vercel.app'
+      },
+      body: JSON.stringify({
+        model: 'google/gemini-2.0-flash-001',
+        messages: [{
+          role: 'user',
+          content: insightsPrompt
+        }]
+      })
+    })
+
+    if (!insightsResponse.ok) {
+      throw new Error(`OpenRouter API error generating insights: ${insightsResponse.statusText}`)
+    }
+
+    const insightsLLMResponse = await insightsResponse.json()
+    const cleanInsights = JSON.parse(insightsLLMResponse.choices[0].message.content.replace(/```json\n?|\n?```/g, '').trim())
+
     return new Response(
-      JSON.stringify({ mindmap: filledTemplate }),
+      JSON.stringify({ 
+        mindmap: filledTemplate,
+        insights: cleanInsights 
+      }),
       { 
         headers: { "Content-Type": "application/json" },
         status: 200

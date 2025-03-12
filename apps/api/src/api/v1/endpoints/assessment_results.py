@@ -34,6 +34,7 @@ async def update_assessment_result(result_id: int, result_in: AssessmentResultUp
     result_in.id = result_id
     return await assessment_result.update(db, obj_in=result_in)
 
+# this fills out the mindmap and generates actionable insights
 @router.post("/{result_id}/process", response_model=AssessmentResult)
 async def process_assessment_result(
     result_id: int, 
@@ -56,10 +57,11 @@ async def process_assessment_result(
     if 'error' in response:
         raise HTTPException(status_code=400, detail=response['error'])
     
-    # Update the result with the processed template
+    # Update the result with the processed template and insights
     update_data = AssessmentResultUpdate(
         id=result_id,
-        mindmap=response['mindmap']
+        mindmap=response['mindmap'],
+        insights=response['insights']
     )
     
     return await assessment_result.update(db=db, obj_in=update_data) 
