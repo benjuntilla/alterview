@@ -119,7 +119,7 @@ def process_assessment(data: dict) -> dict:
                 "HTTP-Referer": "https://alterview-web.vercel.app"
             },
             json={
-                "model": "google/gemini-2.0-flash-001",
+                "model": "openai/gpt-4o",
                 "messages": [
                     {
                         "role": "user",
