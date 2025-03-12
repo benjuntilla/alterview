@@ -35,7 +35,7 @@ async def update_assessment_result(result_id: int, result_in: AssessmentResultUp
     return await assessment_result.update(db, obj_in=result_in)
 
 # this fills out the mindmap and generates actionable insights
-@router.post("/{result_id}/process", response_model=AssessmentResult)
+@router.get("/{result_id}/process", response_model=AssessmentResult)
 async def process_assessment_result(
     result_id: int, 
     db: AsyncClient = Depends(get_db)
