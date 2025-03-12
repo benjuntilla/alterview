@@ -1,5 +1,4 @@
 from typing import Optional, ClassVar
-from pydantic import Json
 
 from .base import CreateBase, ResponseBase, UpdateBase
 
@@ -9,9 +8,9 @@ class AssessmentResultBase(CreateBase):
     student_id: int
     voice_recording_id: Optional[int] = None
     transcript: Optional[str] = None
-    mindmap: Optional[Json] = None
+    mindmap: Optional[str] = None
     table_name: ClassVar[str] = "AssessmentResult"
-    insights: Optional[Json] = None
+    insights: Optional[str] = None
 
 class AssessmentResultCreate(AssessmentResultBase):
     pass
