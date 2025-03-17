@@ -1,8 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from .endpoints import assessments, assessment_results, students, teachers, spells
+from .auth import get_api_key
 
-api_router = APIRouter()
+api_router = APIRouter(dependencies=[Depends(get_api_key)])
 
 # New endpoints
 api_router.include_router(assessments.router, prefix="/assessments", tags=["assessments"])
