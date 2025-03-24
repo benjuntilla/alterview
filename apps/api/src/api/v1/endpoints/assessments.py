@@ -1,12 +1,17 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from supabase._async.client import AsyncClient
+import httpx
+import json
+from typing import Dict, Any, Optional
 
 from ...dependencies import get_db
 from ....schemas.assessment import Assessment, AssessmentCreate
 from ....schemas.assessment_result import AssessmentResult
 from ....crud.assessment import assessment
 from ....crud.assessment_result import assessment_result
+from ....schemas.mindmap import MindmapRequest, MindmapResponse
+from ....config import settings
 
 router = APIRouter()
 
@@ -77,4 +82,254 @@ async def process_assessment_results(
         raise HTTPException(
             status_code=500,
             detail=f"Failed to process mindmaps: {str(e)}"
-        ) 
+        )
+
+@router.post("/generate-mindmap", response_model=MindmapResponse)
+async def generate_mindmap(mindmap_request: MindmapRequest):
+    """
+    Generate a mindmap from educational content using OpenRouter API with structured outputs.
+    
+    The endpoint analyzes the input text to:
+    - Identify the main topic
+    - Extract 3-5 key subtopics
+    - Generate concise descriptions
+    - Create up to 2 levels of nesting
+    
+    Uses OpenRouter's structured outputs feature to ensure the response follows the desired schema.
+    
+    Args:
+        mindmap_request: Input text to analyze and generate a mindmap from
+        
+    Returns:
+        MindmapResponse: A structured mindmap with topic, subtopics, and descriptions
+        
+    Raises:
+        HTTPException: If the input is invalid or if there are issues with the OpenRouter API
+    """
+    # Validate input text
+    if not mindmap_request.text:
+        raise HTTPException(status_code=400, detail="Input text cannot be empty")
+    
+    # Get OpenRouter API key from settings
+    API_KEY = settings.OPENROUTER_API_KEY
+    if not API_KEY:
+        raise HTTPException(
+            status_code=500, 
+            detail="OpenRouter API key is not configured"
+        )
+    
+    print(f"Using OpenRouter API key: {API_KEY[:10]}...{API_KEY[-5:]}")
+    
+    # Define the JSON schema for the structured output
+    schema = {
+        "type": "object",
+        "properties": {
+            "topic": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Main topic name extracted from content"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Brief description of the topic (1-2 sentences)"
+                    },
+                    "subtopics": {
+                        "type": "array",
+                        "description": "Array of 3-5 key subtopics from the content",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "Subtopic name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Brief description of the subtopic (1-2 sentences)"
+                                },
+                                "subtopics": {
+                                    "type": "array",
+                                    "description": "Optional nested subtopics (maximum 2-3 per subtopic)",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "description": "Sub-subtopic name"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "description": "Brief description of the sub-subtopic (1 sentence)"
+                                            },
+                                            "subtopics": {
+                                                "type": "array",
+                                                "description": "Empty array as we only support 2 levels of nesting",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {},
+                                                    "additionalProperties": False
+                                                }
+                                            }
+                                        },
+                                        "required": ["name", "description", "subtopics"],
+                                        "additionalProperties": False
+                                    }
+                                }
+                            },
+                            "required": ["name", "description", "subtopics"],
+                            "additionalProperties": False
+                        }
+                    }
+                },
+                "required": ["name", "description", "subtopics"],
+                "additionalProperties": False
+            }
+        },
+        "required": ["topic"],
+        "additionalProperties": False
+    }
+    
+    # Prepare the request to OpenRouter API
+    payload = {
+        "model": "openai/gpt-4o",  # or any model that supports structured outputs
+        "messages": [
+            {
+                "role": "system",
+                "content": (
+                    "You are an AI assistant that specializes in creating educational mindmaps. "
+                    "When given educational content, analyze it and extract the main topic, key subtopics, "
+                    "and important details. Organize this information into a hierarchical mindmap structure "
+                    "with concise, informative descriptions."
+                )
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Create a mindmap structure from the following educational content. "
+                    f"Identify the main topic, 3-5 key subtopics, and up to 2-3 sub-subtopics for each where appropriate. "
+                    f"Provide brief, informative descriptions (1-2 sentences) for each topic and subtopic.\n\n"
+                    f"Content: {mindmap_request.text}"
+                )
+            }
+        ],
+        "response_format": {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "mindmap",
+                "strict": True,
+                "schema": schema
+            }
+        }
+    }
+    
+    # Make the request to OpenRouter API with automatic retrying
+    max_retries = 3
+    retry_count = 0
+    
+    while retry_count < max_retries:
+        try:
+            headers = {
+                "Authorization": f"Bearer {API_KEY}",
+                "Content-Type": "application/json",
+                "HTTP-Referer": "https://alterview.vercel.app",  # Add a referer header
+                "X-Title": "Alterview Education App"  # Add a title header
+            }
+            
+            print(f"Making request to OpenRouter API (attempt {retry_count + 1}/{max_retries})")
+            
+            async with httpx.AsyncClient(timeout=60.0) as client:
+                response = await client.post(
+                    "https://openrouter.ai/api/v1/chat/completions",
+                    headers=headers,
+                    json=payload
+                )
+                
+                # Check if the request was successful
+                if response.status_code != 200:
+                    error_detail = f"OpenRouter API error: {response.text}"
+                    print(f"Error from OpenRouter API: {error_detail}")
+                    
+                    if response.status_code == 429:
+                        # Rate limiting - retry with exponential backoff
+                        retry_count += 1
+                        if retry_count < max_retries:
+                            import asyncio
+                            backoff_seconds = 2 ** retry_count
+                            print(f"Rate limit exceeded. Retrying in {backoff_seconds} seconds...")
+                            await asyncio.sleep(backoff_seconds)
+                            continue
+                        else:
+                            raise HTTPException(
+                                status_code=429, 
+                                detail="OpenRouter API rate limit exceeded after multiple retries. Please try again later."
+                            )
+                    else:
+                        # For other errors, retry once
+                        retry_count += 1
+                        if retry_count < max_retries:
+                            print(f"Retrying after error... (attempt {retry_count + 1}/{max_retries})")
+                            continue
+                        else:
+                            raise HTTPException(
+                                status_code=500, 
+                                detail=error_detail
+                            )
+                
+                # Parse the response
+                result = response.json()
+                print(f"Received response from OpenRouter API: {result}")
+                
+                # Extract the mindmap from the response
+                try:
+                    content = result["choices"][0]["message"]["content"]
+                    
+                    # Parse the JSON content
+                    if isinstance(content, str):
+                        try:
+                            mindmap_data = json.loads(content)
+                        except json.JSONDecodeError:
+                            print("Response content is not valid JSON, using as-is")
+                            mindmap_data = content
+                    else:
+                        mindmap_data = content
+                    
+                    # Validate response matches our expected schema
+                    return MindmapResponse(**mindmap_data)
+                    
+                except (KeyError, json.JSONDecodeError) as e:
+                    # Retry on malformed response
+                    retry_count += 1
+                    if retry_count < max_retries:
+                        print(f"Malformed response. Retrying... (attempt {retry_count + 1}/{max_retries})")
+                        continue
+                    else:
+                        raise HTTPException(
+                            status_code=500, 
+                            detail=f"Failed to parse OpenRouter API response after {max_retries} attempts: {str(e)}"
+                        )
+                
+                # If we got here, we succeeded
+                break
+                    
+        except httpx.RequestError as e:
+            # Network-related errors
+            print(f"Error making request to OpenRouter API: {str(e)}")
+            retry_count += 1
+            if retry_count < max_retries:
+                import asyncio
+                print(f"Network error. Retrying in 2 seconds... (attempt {retry_count + 1}/{max_retries})")
+                await asyncio.sleep(2)
+                continue
+            else:
+                raise HTTPException(
+                    status_code=500, 
+                    detail=f"Error making request to OpenRouter API after {max_retries} attempts: {str(e)}"
+                )
+    
+    # This should not be reached, but just in case
+    raise HTTPException(
+        status_code=500, 
+        detail="Unknown error occurred while generating mindmap"
+    ) 

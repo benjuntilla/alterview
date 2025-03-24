@@ -8,7 +8,8 @@ class AssessmentBase(CreateBase):
     system_prompt: str
     mindmap_template: str
     table_name: ClassVar[str] = "Assessment"
-    teacher_id: int
+    teacher_id: int | None = None
+    student_id: int | None = None
 
 class AssessmentCreate(AssessmentBase):
     pass
