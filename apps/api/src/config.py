@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-load_dotenv()
+load_dotenv(override=True)
 
 # If the environment is Gitpod, the root path will be the workspace cluster host
 # If not using gitpod, you can delete this if statement, but keep the else clause
