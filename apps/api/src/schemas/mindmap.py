@@ -15,4 +15,4 @@ class MindmapResponse(BaseModel):
     topic: Topic
 
 class MindmapRequest(BaseModel):
-    text: str = Field(..., min_length=1, max_length=4000) 
+    text: str = Field(..., min_length=1) 
