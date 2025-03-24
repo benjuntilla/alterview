@@ -178,9 +178,13 @@ async def generate_mindmap(mindmap_request: MindmapRequest):
             {
                 "role": "system",
                 "content": """
-    Generate a mindmap from educational content using OpenRouter API with structured outputs.
+    Generate a mindmap from this educational content. The user will give you title,
+    description, and content. You will break apart info in the input overview into subtopics 
+    and sub-subtopics.
+
+    ALSO: If the user provides you syllabus text or policies, don't include that in the mindmap.
     
-    The endpoint analyzes the input text to:
+    IN SUM:
     - Identify the main topic
     - Extract 3-5 key subtopics
     - Generate concise descriptions
