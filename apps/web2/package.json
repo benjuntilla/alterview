@@ -1,0 +1,45 @@
+{
+  "name": "web2",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "dev:https": "concurrently \"next dev\" \"local-ssl-proxy --source 3001 --target 3000\"",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "setup-pdfjs": "bash scripts/setup-pdfjs.sh"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.0.2",
+    "@supabase/supabase-js": "^2.49.1",
+    "@types/d3": "^7.4.3",
+    "@vapi-ai/web": "^1.0.266",
+    "@vercel/speed-insights": "^1.2.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "d3": "^7.9.0",
+    "dotenv": "^16.4.7",
+    "fuse.js": "^7.0.0",
+    "lucide-react": "^0.330.0",
+    "next": "14.1.0",
+    "pdfjs-dist": "^5.0.375",
+    "react": "^18",
+    "react-dom": "^18",
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "concurrently": "^9.1.2",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.0",
+    "local-ssl-proxy": "^2.0.5",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
+  }
+}

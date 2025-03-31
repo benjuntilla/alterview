@@ -1,0 +1,142 @@
+{
+  "topic": {
+    "name": "Data Structures and Algorithms (CSE 310)",
+    "description": "This assessment evaluates fundamental understanding of data structures and algorithms, focusing on implementation, analysis, and applications in software development.",
+    "assessmentCriteria": {
+      "excellentUnderstanding": [
+        "Student can implement complex data structures and algorithms from scratch",
+        "Student can analyze time and space complexity with mathematical precision",
+        "Student can evaluate tradeoffs between different algorithmic approaches"
+      ],
+      "adequateUnderstanding": [
+        "Student can describe common data structures and algorithms",
+        "Student understands basic complexity notation (Big O)",
+        "Student can identify appropriate data structures for simple problems"
+      ],
+      "misconceptions": [
+        "Believing that the fastest algorithm is always the best choice regardless of context",
+        "Assuming that memory usage is negligible compared to execution time",
+        "Thinking that asymptotic analysis always predicts real-world performance accurately"
+      ],
+      "tutorGuidance": "Focus assessment on practical applications rather than theoretical definitions. Ask students how they would solve real-world problems using appropriate data structures."
+    },
+    "subtopics": [
+      {
+        "name": "Arrays and Linked Lists",
+        "description": "Fundamental sequential data structures used to store collections of elements.",
+        "assessmentCriteria": {
+          "excellentUnderstanding": [
+            "Student can implement specialized list structures (e.g., circular, doubly-linked)",
+            "Student can analyze time complexity of operations on different list implementations",
+            "Student can explain memory layout differences and performance implications"
+          ],
+          "adequateUnderstanding": [
+            "Student can describe differences between arrays and linked lists",
+            "Student knows basic operations and their general efficiency",
+            "Student can implement simple operations on both structures"
+          ],
+          "misconceptions": [
+            "Thinking arrays are always less efficient than linked lists",
+            "Assuming linked lists always use less memory than arrays",
+            "Believing arrays have O(1) insertion at arbitrary positions"
+          ],
+          "tutorGuidance": "Ask about real-world scenarios where one would be preferred over the other. Focus on tradeoffs rather than absolute statements about which is 'better'."
+        },
+        "subtopics": []
+      },
+      {
+        "name": "Trees and Graphs",
+        "description": "Non-linear data structures representing hierarchical or network relationships between data.",
+        "assessmentCriteria": {
+          "excellentUnderstanding": [
+            "Student can implement balanced trees and graph algorithms",
+            "Student understands tree balancing techniques and their impact on performance",
+            "Student can apply appropriate traversal methods based on specific requirements"
+          ],
+          "adequateUnderstanding": [
+            "Student can describe basic tree and graph types",
+            "Student knows common traversal algorithms (BFS, DFS)",
+            "Student understands basic tree operations"
+          ],
+          "misconceptions": [
+            "Confusing tree height with number of nodes",
+            "Thinking all graph algorithms work the same on directed and undirected graphs",
+            "Assuming binary search trees are always balanced"
+          ],
+          "tutorGuidance": "Focus on practical applications like file systems for trees or social networks for graphs. Assess understanding of when to use different traversal methods."
+        },
+        "subtopics": [
+          {
+            "name": "Binary Search Trees",
+            "description": "Tree data structures that maintain ordered elements for efficient search operations.",
+            "assessmentCriteria": {
+              "excellentUnderstanding": [
+                "Student can implement self-balancing BSTs (AVL, Red-Black)",
+                "Student can analyze worst-case scenarios and explain solutions",
+                "Student understands the mathematics behind tree balancing"
+              ],
+              "adequateUnderstanding": [
+                "Student can implement basic BST operations",
+                "Student understands how BST structure enables binary search",
+                "Student knows when a BST becomes inefficient"
+              ],
+              "misconceptions": [
+                "Assuming BSTs are always O(log n) for all operations",
+                "Thinking simple BSTs are adequate for all production use cases",
+                "Not recognizing when a tree becomes skewed"
+              ],
+              "tutorGuidance": "Ask students to explain how they would implement a dictionary or map using a BST and what edge cases they should handle."
+            },
+            "subtopics": []
+          }
+        ]
+      },
+      {
+        "name": "Sorting and Searching Algorithms",
+        "description": "Techniques for organizing data and finding specific elements efficiently.",
+        "assessmentCriteria": {
+          "excellentUnderstanding": [
+            "Student can implement and analyze advanced sorting algorithms",
+            "Student understands sorting algorithm stability and when it matters",
+            "Student can select appropriate algorithms based on data characteristics"
+          ],
+          "adequateUnderstanding": [
+            "Student knows common sorting algorithms and their complexity",
+            "Student can implement basic sorting algorithms",
+            "Student understands the difference between comparison-based and non-comparison sorts"
+          ],
+          "misconceptions": [
+            "Thinking QuickSort is always faster than MergeSort",
+            "Not recognizing that some sorts are stable while others aren't",
+            "Assuming binary search works on unsorted data"
+          ],
+          "tutorGuidance": "Focus assessment on algorithm selection rather than implementation details. Ask when they would choose one algorithm over another."
+        },
+        "subtopics": []
+      },
+      {
+        "name": "Algorithm Analysis",
+        "description": "Techniques for evaluating algorithm efficiency in terms of time and space requirements.",
+        "assessmentCriteria": {
+          "excellentUnderstanding": [
+            "Student can perform rigorous mathematical analysis of complex algorithms",
+            "Student understands amortized analysis for advanced data structures",
+            "Student can analyze recursive algorithms using recurrence relations"
+          ],
+          "adequateUnderstanding": [
+            "Student understands Big O, Theta, and Omega notations",
+            "Student can analyze simple iterative and recursive algorithms",
+            "Student can identify dominant terms in complexity expressions"
+          ],
+          "misconceptions": [
+            "Focusing only on time complexity and ignoring space complexity",
+            "Assuming Big O is an exact measurement rather than an upper bound",
+            "Not recognizing the importance of constant factors for small inputs"
+          ],
+          "tutorGuidance": "Ask students to compare algorithms not just on asymptotic complexity but also on other factors like implementation simplicity and constant factors."
+        },
+        "subtopics": []
+      }
+    ]
+  }
+}

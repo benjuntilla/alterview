@@ -1,0 +1,67 @@
+{
+  "topic": {
+    "name": "Sample Interview Topic",
+    "description": "A brief description of the interview topic and what knowledge will be assessed.",
+    "assessmentCriteria": {
+      "excellentUnderstanding": [
+        "Student can explain core concepts accurately",
+        "Student can apply knowledge to new scenarios",
+        "Student can connect ideas across different domains"
+      ],
+      "adequateUnderstanding": [
+        "Student recognizes key terminology",
+        "Student can describe basic concepts"
+      ],
+      "misconceptions": [
+        "Common misunderstanding #1",
+        "Common misunderstanding #2",
+        "Common misunderstanding #3"
+      ],
+      "tutorGuidance": "Guidance for the AI interviewer on how to approach this topic."
+    },
+    "subtopics": [
+      {
+        "name": "Subtopic 1",
+        "description": "Description of the first subtopic",
+        "assessmentCriteria": {
+          "excellentUnderstanding": [
+            "Criteria for excellent understanding of subtopic 1"
+          ],
+          "adequateUnderstanding": [
+            "Criteria for adequate understanding of subtopic 1"
+          ],
+          "misconceptions": ["Common misconceptions about subtopic 1"],
+          "tutorGuidance": "Guidance for the AI on this subtopic"
+        },
+        "subtopics": [
+          {
+            "name": "Nested Subtopic 1.1",
+            "description": "More detailed aspect of subtopic 1",
+            "assessmentCriteria": {
+              "excellentUnderstanding": ["Detailed knowledge criteria"],
+              "adequateUnderstanding": ["Basic knowledge criteria"],
+              "misconceptions": ["Specific misconceptions"],
+              "tutorGuidance": "Specific guidance for this detailed topic"
+            },
+            "subtopics": []
+          }
+        ]
+      },
+      {
+        "name": "Subtopic 2",
+        "description": "Description of the second subtopic",
+        "assessmentCriteria": {
+          "excellentUnderstanding": [
+            "Criteria for excellent understanding of subtopic 2"
+          ],
+          "adequateUnderstanding": [
+            "Criteria for adequate understanding of subtopic 2"
+          ],
+          "misconceptions": ["Common misconceptions about subtopic 2"],
+          "tutorGuidance": "Guidance for the AI on this subtopic"
+        },
+        "subtopics": []
+      }
+    ]
+  }
+}
