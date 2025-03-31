@@ -155,8 +155,8 @@ function AssessmentForm() {
 
   return (
     <div className="relative min-h-[calc(100vh-10rem)] px-4 py-8 overflow-hidden">
-      {/* Background animation */}
-      <FloatingIcons />
+      {/* Background animation - only render on client side */}
+      {loaded && <FloatingIcons />}
       
       {/* Main container */}
       <div className="container mx-auto max-w-2xl relative z-10">
