@@ -169,22 +169,22 @@ export default function StudentDashboard({
   // Format for spaced repetition dates
   const formatReviewDate = (dateString: string | null) => {
     if (!dateString) return "Not scheduled";
-    
+
     const date = new Date(dateString);
     const today = new Date();
-    
+
     // If it's today
     if (date.toDateString() === today.toDateString()) {
       return "Today";
     }
-    
+
     // If it's tomorrow
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
     if (date.toDateString() === tomorrow.toDateString()) {
       return "Tomorrow";
     }
-    
+
     // If it's within a week
     const nextWeek = new Date(today);
     nextWeek.setDate(nextWeek.getDate() + 7);
@@ -192,7 +192,7 @@ export default function StudentDashboard({
       const options: Intl.DateTimeFormatOptions = { weekday: 'long' };
       return date.toLocaleDateString('en-US', options);
     }
-    
+
     // Otherwise return the date
     return date.toLocaleDateString('en-US', {
       month: 'short',
@@ -203,14 +203,14 @@ export default function StudentDashboard({
   // Function to determine how long since last review
   const getDaysSince = (dateString: string | null) => {
     if (!dateString) return "Never";
-    
+
     const lastDate = new Date(dateString);
     const today = new Date();
-    
+
     // Calculate the difference in days
     const diffTime = today.getTime() - lastDate.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays === 0) return "Today";
     if (diffDays === 1) return "Yesterday";
     if (diffDays < 7) return `${diffDays} days ago`;
@@ -219,7 +219,7 @@ export default function StudentDashboard({
   };
 
   // Filter assessments to only show IDs 4, 5, and 1
-  const filteredAssessments = assessments.filter(assessment => 
+  const filteredAssessments = assessments.filter(assessment =>
     ['4', '5', '1'].includes(assessment.id)
   );
 
@@ -243,7 +243,8 @@ export default function StudentDashboard({
       />
 
       {/* Main container */}
-      <div className="container mx-auto max-w-4xl relative z-10">
+      {/* Adjusted max-width for better responsiveness */}
+      <div className="container mx-auto max-w-full md:max-w-4xl relative z-10">
         {/* Header section with welcome message */}
         <div
           className={`transition-all duration-700 ease-out ${
@@ -251,15 +252,17 @@ export default function StudentDashboard({
           }`}
         >
           <div className="mb-8">
-            <div className="flex justify-between items-center mb-3">
-              <h1 className="text-4xl font-semibold text-gray-900 animate-fadeIn">
+            <div className="mb-3">
+              {/* Adjusted font size for mobile */}
+              <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900 animate-fadeIn">
                 Welcome, {studentName || "Student"}
               </h1>
             </div>
-            
-            <div className="flex items-center space-x-4">
+
+            {/* Adjusted layout for mobile: stack vertically */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
               <p
-                className="text-gray-500 text-lg animate-fadeIn"
+                className="text-gray-500 text-base sm:text-lg animate-fadeIn"
                 style={{ animationDelay: "100ms" }}
               >
                 ID: {params.student_id}
@@ -284,27 +287,35 @@ export default function StudentDashboard({
           }`}
           style={{ animationDelay: "100ms" }}
         >
-          <div className="px-8 py-6">
-            <div className="flex items-center space-x-6">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-xl bg-alterview-indigo/10 flex items-center justify-center">
-                  <FileText className="h-6 w-6 text-alterview-indigo" />
+          {/* Adjusted padding for mobile */}
+          <div className="px-4 py-4 sm:px-8 sm:py-6">
+            {/* Adjusted layout for mobile: stack vertically */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
+              <div className="flex items-center space-x-4 sm:space-x-6 w-full sm:w-auto">
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-alterview-indigo/10 flex items-center justify-center">
+                    <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-alterview-indigo" suppressHydrationWarning={true} />
+                  </div>
+                </div>
+                <div className="flex-1 sm:flex-auto">
+                  {/* Adjusted font size for mobile */}
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">
+                    Create Custom Assessment
+                  </h3>
+                  {/* Adjusted font size for mobile */}
+                  <p className="text-sm sm:text-base text-gray-600">
+                    Want to test your knowledge on a custom topic? Try it here.
+                  </p>
                 </div>
               </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                  Create Custom Assessment
-                </h3>
-                <p className="text-gray-600">
-                  Want to test your knowledge on a custom topic? Try it here.
-                </p>
-              </div>
-              <div className="flex-shrink-0">
+              {/* Adjusted button layout for mobile: full width */}
+              <div className="flex-shrink-0 w-full sm:w-auto">
                 <Link
                   href={`/create-assessment?creator_id=${params.student_id}&is_creator_student=true`}
-                  className="inline-flex items-center px-4 py-2.5 bg-alterview-gradient text-white rounded-xl hover:shadow-md transition-all duration-300 group"
+                  className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2.5 bg-alterview-gradient text-white rounded-xl hover:shadow-md transition-all duration-300 group"
                 >
-                  <span className="text-base font-medium">Create</span>
+                  {/* Adjusted font size for mobile */}
+                  <span className="text-sm sm:text-base font-medium">Create</span>
                   <ChevronRight className="h-4 w-4 ml-1.5 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </div>
@@ -320,14 +331,16 @@ export default function StudentDashboard({
           style={{ animationDelay: "100ms" }}
         >
           {/* Section header */}
-          <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between">
+          {/* Adjusted padding for mobile */}
+          <div className="px-4 py-4 sm:px-8 sm:py-6 border-b border-gray-100 flex items-center justify-between">
             <div className="flex items-center">
               <BookOpen className="h-5 w-5 text-alterview-indigo mr-2" />
-              <h2 className="text-xl font-semibold text-gray-800">
+              {/* Adjusted font size for mobile */}
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
                 Your Assessments
               </h2>
             </div>
-            <span className="text-sm text-gray-500">
+            <span className="text-xs sm:text-sm text-gray-500">
               {filteredAssessments.length} total
             </span>
           </div>
@@ -341,28 +354,32 @@ export default function StudentDashboard({
                   className="hover:bg-gray-50/80 transition-colors"
                   style={{ animationDelay: `${150 + index * 50}ms` }}
                 >
-                  <div className="px-8 py-5 flex justify-between items-center">
-                    <div className="flex-1">
-                      <h3 className="font-medium text-gray-900 mb-1">
+                  {/* Adjusted padding and layout for mobile: stack vertically */}
+                  <div className="px-4 py-4 sm:px-8 sm:py-5 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
+                    <div className="flex-1 w-full sm:w-auto">
+                      {/* Adjusted font size for mobile */}
+                      <h3 className="font-medium text-base sm:text-lg text-gray-900 mb-1">
                         {assessment.title}
                       </h3>
-                      <div className="flex items-center text-sm text-gray-500 space-x-3">
+                      {/* Adjusted layout and font size for mobile */}
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center text-xs sm:text-sm text-gray-500 space-y-1 sm:space-y-0 sm:space-x-3">
                         <span>{assessment.course}</span>
-                        <span className="h-1 w-1 rounded-full bg-gray-300"></span>
+                        <span className="hidden sm:inline h-1 w-1 rounded-full bg-gray-300"></span>
                         <span>Due: {assessment.dueDate}</span>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-3">
+                    {/* Adjusted button layout for mobile: stack vertically */}
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto mt-2 sm:mt-0">
                       {/* <Link
                         href={`/student/${params.student_id}/practice/${assessment.id}`}
-                        className="flex items-center px-5 py-2.5 bg-white border border-alterview-indigo/30 text-alterview-indigo rounded-xl hover:bg-alterview-indigo/5 transition-all duration-300 group"
+                        className="flex items-center justify-center w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-2.5 text-sm sm:text-base bg-white border border-alterview-indigo/30 text-alterview-indigo rounded-xl hover:bg-alterview-indigo/5 transition-all duration-300 group"
                       >
                         <span>Practice</span>
                         <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-0.5 transition-transform" />
                       </Link> */}
                       <Link
                         href={`/assessment/${params.student_id}/${assessment.id}`}
-                        className="flex items-center px-5 py-2.5 bg-alterview-gradient text-white rounded-xl hover:shadow-md transition-all duration-300 group"
+                        className="flex items-center justify-center w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-2.5 text-sm sm:text-base bg-alterview-gradient text-white rounded-xl hover:shadow-md transition-all duration-300 group"
                       >
                         <span>Start</span>
                         <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-0.5 transition-transform" />
@@ -373,8 +390,9 @@ export default function StudentDashboard({
               ))}
             </div>
           ) : (
-            <div className="px-8 py-12 text-center">
-              <p className="text-gray-500">
+            /* Adjusted padding for mobile */
+            <div className="px-4 py-8 sm:px-8 sm:py-12 text-center">
+              <p className="text-gray-500 text-sm sm:text-base">
                 No assessments available at this time.
               </p>
             </div>
@@ -389,14 +407,17 @@ export default function StudentDashboard({
           style={{ animationDelay: "200ms" }}
         >
           {/* Section header */}
-          <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between">
+          {/* Adjusted padding for mobile */}
+          <div className="px-4 py-4 sm:px-8 sm:py-6 border-b border-gray-100 flex items-center justify-between">
             <div className="flex items-center">
               <History className="h-5 w-5 text-alterview-violet mr-2" />
-              <h2 className="text-xl font-semibold text-gray-800">
+              {/* Adjusted font size for mobile */}
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
                 Past Attempts
               </h2>
             </div>
-            <span className="text-sm text-gray-500">
+            {/* Adjusted font size for mobile */}
+            <span className="text-xs sm:text-sm text-gray-500">
               {assessmentResults.length > 0 &&
                 `Showing ${visibleResults.length} of ${assessmentResults.length}`}
             </span>
@@ -404,12 +425,13 @@ export default function StudentDashboard({
 
           {/* Loading state */}
           {isLoading && (
-            <div className="px-8 py-10 text-center">
+            /* Adjusted padding for mobile */
+            <div className="px-4 py-6 sm:px-8 sm:py-10 text-center">
               <div className="max-w-md mx-auto">
-                <div className="bg-gray-50 rounded-xl p-6 mb-4 animate-pulse">
-                  <div className="w-12 h-12 bg-gray-200 rounded-full mx-auto mb-4"></div>
-                  <div className="h-5 bg-gray-200 rounded w-1/2 mx-auto mb-3"></div>
-                  <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
+                <div className="bg-gray-50 rounded-xl p-4 sm:p-6 mb-4 animate-pulse">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded-full mx-auto mb-3 sm:mb-4"></div>
+                  <div className="h-4 sm:h-5 bg-gray-200 rounded w-1/2 mx-auto mb-2 sm:mb-3"></div>
+                  <div className="h-3 sm:h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
                 </div>
               </div>
             </div>
@@ -417,19 +439,21 @@ export default function StudentDashboard({
 
           {/* Error state */}
           {!isLoading && error && (
-            <div className="px-8 py-10 text-center">
+            /* Adjusted padding for mobile */
+            <div className="px-4 py-6 sm:px-8 sm:py-10 text-center">
               <div className="max-w-md mx-auto">
-                <div className="bg-red-50 rounded-xl p-6 mb-4">
-                  <h3 className="text-lg font-medium text-red-800 mb-2">
+                <div className="bg-red-50 rounded-xl p-4 sm:p-6 mb-4">
+                  {/* Adjusted font size for mobile */}
+                  <h3 className="text-base sm:text-lg font-medium text-red-800 mb-2">
                     Error loading results
                   </h3>
                   <p className="text-red-600 text-sm">{error}</p>
                 </div>
                 <button
-                  className="mt-2 inline-flex items-center px-4 py-2 text-sm font-medium text-alterview-indigo border border-alterview-indigo/30 rounded-xl hover:bg-alterview-indigo/5 transition-colors"
+                  className="mt-2 inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-alterview-indigo border border-alterview-indigo/30 rounded-xl hover:bg-alterview-indigo/5 transition-colors"
                   onClick={() => window.location.reload()}
                 >
-                  <History className="h-4 w-4 mr-2" />
+                  <History className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                   Try again
                 </button>
               </div>
@@ -452,32 +476,38 @@ export default function StudentDashboard({
                       className="hover:bg-gray-50/80 transition-colors"
                       style={{ animationDelay: `${150 + index * 50}ms` }}
                     >
-                      <div className="px-8 py-5 flex justify-between items-center">
-                        <div className="flex-1">
-                          <h3 className="font-medium text-gray-900 mb-1">
+                      {/* Adjusted padding and layout for mobile: stack vertically */}
+                      <div className="px-4 py-4 sm:px-8 sm:py-5 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
+                        <div className="flex-1 w-full sm:w-auto">
+                          {/* Adjusted font size for mobile */}
+                          <h3 className="font-medium text-base sm:text-lg text-gray-900 mb-1">
                             {matchingAssessment?.title || `Assessment #${result.assessment_id}`}
                           </h3>
-                          <div className="flex items-center text-sm text-gray-500 space-x-3">
+                          {/* Adjusted layout and font size for mobile */}
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center text-xs sm:text-sm text-gray-500 space-y-1 sm:space-y-0 sm:space-x-3">
                             <div className="flex items-center">
-                              <Calendar className="h-3.5 w-3.5 mr-1 text-gray-400" />
+                              <Calendar className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1 text-gray-400" />
                               <span>{formatDate(result.created_at)}</span>
                             </div>
                             {matchingAssessment && (
                               <>
-                                <span className="h-1 w-1 rounded-full bg-gray-300"></span>
+                                <span className="hidden sm:inline h-1 w-1 rounded-full bg-gray-300"></span>
                                 <span>{matchingAssessment.course}</span>
                               </>
                             )}
                           </div>
                         </div>
-                        <Link
-                          href={`/student/${params.student_id}/results/${result.id}`}
-                          className="flex items-center px-4 py-2 text-alterview-indigo border border-alterview-indigo/30 rounded-xl hover:bg-alterview-indigo/5 transition-colors group"
-                        >
-                          <FileText className="h-4 w-4 mr-1" />
-                          <span>View</span>
-                          <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-0.5 transition-transform" />
-                        </Link>
+                        {/* Adjusted button layout for mobile: full width */}
+                        <div className="w-full sm:w-auto mt-2 sm:mt-0">
+                          <Link
+                            href={`/student/${params.student_id}/results/${result.id}`}
+                            className="flex items-center justify-center w-full sm:w-auto px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm text-alterview-indigo border border-alterview-indigo/30 rounded-xl hover:bg-alterview-indigo/5 transition-colors group"
+                          >
+                            <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" suppressHydrationWarning={true} />
+                            <span>View</span>
+                            <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 ml-1 group-hover:translate-x-0.5 transition-transform" />
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   );
@@ -486,20 +516,21 @@ export default function StudentDashboard({
 
               {/* Show More button - only display if there are more than 5 results */}
               {assessmentResults.length > 5 && (
-                <div className="px-8 py-4 border-t border-gray-100 flex justify-center">
+                /* Adjusted padding for mobile */
+                <div className="px-4 py-3 sm:px-8 sm:py-4 border-t border-gray-100 flex justify-center">
                   <button
                     onClick={() => setShowAllResults(!showAllResults)}
-                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-alterview-indigo hover:text-alterview-violet transition-colors"
+                    className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-alterview-indigo hover:text-alterview-violet transition-colors"
                   >
                     {showAllResults ? (
                       <>
                         <span>Show Less</span>
-                        <ChevronDown className="h-4 w-4 ml-1 transform rotate-180" />
+                        <ChevronDown className="h-3.5 w-3.5 sm:h-4 sm:w-4 ml-1 transform rotate-180" />
                       </>
                     ) : (
                       <>
                         <span>Show More</span>
-                        <ChevronDown className="h-4 w-4 ml-1" />
+                        <ChevronDown className="h-3.5 w-3.5 sm:h-4 sm:w-4 ml-1" />
                       </>
                     )}
                   </button>
@@ -509,16 +540,18 @@ export default function StudentDashboard({
           ) : (
             !isLoading &&
             !error && (
-              <div className="px-8 py-10 text-center">
+              /* Adjusted padding for mobile */
+              <div className="px-4 py-6 sm:px-8 sm:py-10 text-center">
                 <div className="max-w-md mx-auto">
-                  <div className="bg-gray-50 rounded-xl p-6 mb-4">
-                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <History className="h-6 w-6 text-gray-400" />
+                  <div className="bg-gray-50 rounded-xl p-4 sm:p-6 mb-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                      <History className="h-5 w-5 sm:h-6 sm:w-6 text-gray-400" />
                     </div>
-                    <h3 className="text-lg font-medium text-gray-800 mb-2">
+                    {/* Adjusted font size for mobile */}
+                    <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-2">
                       No past attempts yet
                     </h3>
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-gray-500 text-xs sm:text-sm">
                       After you complete an assessment, your attempts will
                       appear here for review.
                     </p>
@@ -531,12 +564,12 @@ export default function StudentDashboard({
 
         {/* Back to home link */}
         <div
-          className="text-center animate-fadeIn"
+          className="text-center animate-fadeIn pb-8" // Added bottom padding
           style={{ animationDelay: "300ms" }}
         >
           <Link
             href="/"
-            className="inline-flex items-center justify-center text-alterview-indigo hover:text-alterview-violet transition-colors apple-hover"
+            className="inline-flex items-center justify-center text-sm sm:text-base text-alterview-indigo hover:text-alterview-violet transition-colors apple-hover"
           >
             <ArrowLeftCircle className="h-4 w-4 mr-1" />
             <span>Back to home</span>
